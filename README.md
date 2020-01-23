@@ -1,2 +1,2 @@
 # BrainFuckInterpreter
-An language interpreter
+An simple BrainFuck language interpreter written in C
