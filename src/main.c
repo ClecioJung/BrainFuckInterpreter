@@ -24,9 +24,7 @@ enum ActionToBeTaken
 //------------------------------------------------------------------------------
 
 static const char *const version = "1.0.0";
-
 static const char *fileName = NULL;
-
 static enum ActionToBeTaken action = acParser;
 
 //------------------------------------------------------------------------------
@@ -36,13 +34,11 @@ static enum ActionToBeTaken action = acParser;
 char *getContentFromFile(const char *const name)
 {
     char *buffer = NULL;
-
     // Get file size
     struct stat st;
     if (!stat(name, &st))
     {
         const size_t fileSize = st.st_size;
-
         // Open file
         FILE *file = fopen(name, "rb");
         if (file)
@@ -143,13 +139,11 @@ int main(const int argc, const char *const argv[])
     {
         return EXIT_SUCCESS;
     }
-
     if (!fileName)
     {
         argumentsUsage("No file specified");
         return EXIT_FAILURE;
     }
-
     prog = getContentFromFile(fileName);
     if (prog)
     {
