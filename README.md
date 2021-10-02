@@ -13,4 +13,32 @@
 
 ## BrainFuck
 
-## Example
+**Brainfuck** is an minimalistic esoteric programming language created in 1993 by Urban Müller (check out this article [article](https://en.wikipedia.org/wiki/Brainfuck) for more information). The language consists of only eight simple commands, a data pointer and an instruction pointer:
+
+| Instruction | Description |
+| ----------- | ----------- |
+| `>`         | Increment the data pointer |
+| `<`         | Decrement the data pointer |
+| `+`         | Increment the byte at the data pointer |
+| `-`         | Decrement the byte at the data pointer |
+| `.`         | Output the byte at the data pointer |
+| `,`         | Get one byte from the input and stores it at the data pointer |
+| `[`         | If the byte at the data pointer is non zero, then loop the instructions inside the brackets `[ ]` |
+| `]`         | End of loop |
+
+Below we see an hello world program in this language:
+
+```brainfuck
+++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.
+```
+
+As you can see, this code is very difficult to understand, however, this language was not designed for practical use, but rather to inspire and provide challenges for programmers, such as the development of this interpreter =).
+
+## Usage
+
+Download this project and compile it by typing the command `make` in its folder. Next, just run the executable `BrainFuckInterpreter` passing as an argument the BrainFuck code file you wish to parse. Here is an example:
+
+```
+./BrainFuckInterpreter BrainFuck/HelloWorld.b 
+Hello World!
+```
