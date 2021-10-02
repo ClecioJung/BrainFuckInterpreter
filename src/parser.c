@@ -8,10 +8,6 @@
 #include "parser.h"
 
 //------------------------------------------------------------------------------
-// DEFINITIONS
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
 // USER TYPES
 //------------------------------------------------------------------------------
 
@@ -34,10 +30,6 @@ struct Instruction
     InstFunction function;
     const char *description;
 };
-
-//------------------------------------------------------------------------------
-// FUNCTION PROTOTYPES
-//------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // GLOBAL VARIABLES
@@ -279,7 +271,6 @@ void brainFuck(const char *const code)
 {
     // Initiates program variables
     struct Environment *env = (struct Environment *)malloc(sizeof(struct Environment));
-
     *env = (struct Environment){
         .mIndex = 0,
         .maxIndex = 0,
@@ -289,7 +280,6 @@ void brainFuck(const char *const code)
         .prog = code,
         .mem = NULL,
     };
-
     // Initiates program memory
     env->mem = (int *)malloc(memorySize * sizeof(int));
     memset(env->mem, 0, memorySize * sizeof(int));
@@ -312,15 +302,12 @@ void brainFuck(const char *const code)
                 }
             }
         }
-        // didn't found valid instruction in the table
-        // so ignores
+        // didn't found valid instruction in the table, so ignores
     }
-
     if (env->loop)
     {
         codeError(env, "Incorrect loop declaration");
     }
-
 exitBrainFuck:
     free((void *)env->mem);
     free((void *)env);
