@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <termios.h> // termios, TCSANOW, ECHO, ICANON
+#include <unistd.h>  // STDIN_FILENO
 #include "arguments.h"
 #include "parser.h"
 
@@ -26,6 +28,7 @@ enum ActionToBeTaken
 static const char *const version = "1.0.0";
 static const char *fileName = NULL;
 static enum ActionToBeTaken action = acParser;
+static struct termios oldt, newt;
 
 //------------------------------------------------------------------------------
 // FUNCTIONS
@@ -120,6 +123,25 @@ static int changeMemorySize(const char *const arg)
     return EXIT_SUCCESS;
 }
 
+void restoreTerminalSettings(void)
+{
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+}
+
+void changeTerminalSettings(void)
+{
+    // gets the parameters of the current terminal
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    /* ICANON normally takes care that one line at a time will be processed
+       that means it will return if it sees a "\n" or an EOF or an EOL */
+    newt.c_lflag &= ~(ICANON);
+    /* Those new settings will be set to STDIN
+       TCSANOW tells tcsetattr to change attributes immediately. */
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    atexit(restoreTerminalSettings);
+}
+
 //------------------------------------------------------------------------------
 // MAIN
 //------------------------------------------------------------------------------
@@ -127,6 +149,8 @@ static int changeMemorySize(const char *const arg)
 int main(const int argc, const char *const argv[])
 {
     const char *prog;
+    changeTerminalSettings();
+    // parse command line arguments
     initBrainFuck();
     initArguments(printUsage, getFileName);
     addArgument("--version", "-v", printVersion, "Display the software version.");
@@ -134,7 +158,6 @@ int main(const int argc, const char *const argv[])
     addArgument("--language", "-l", printLanguageInstructions, "Displays language instructions.");
     addArgument("--memory=%d", "-m=%d", changeMemorySize, "Change program buffer size.");
     parseArguments(argc, argv);
-
     if (action == acNone)
     {
         return EXIT_SUCCESS;

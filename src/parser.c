@@ -128,6 +128,7 @@ static int getByte(struct Environment *env)
 {
     printf("\nInsert a key:\n");
     env->mem[env->mIndex] = getchar();
+    putchar('\n');
     return EXIT_SUCCESS;
 }
 

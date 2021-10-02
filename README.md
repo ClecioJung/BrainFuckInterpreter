@@ -39,6 +39,6 @@ As you can see, this code is very difficult to understand, however, this languag
 Download this project and compile it by typing the command `make` in its folder. Next, just run the executable `BrainFuckInterpreter` passing as an argument the BrainFuck code file you wish to parse. Here is an example:
 
 ```
-./BrainFuckInterpreter BrainFuck/HelloWorld.b 
+./BrainFuckInterpreter BrainFuck/helloWorld.b 
 Hello World!
 ```
