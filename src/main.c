@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <termios.h> // termios, TCSANOW, ECHO, ICANON
 #include <unistd.h>  // STDIN_FILENO
+#include <errno.h>
 #include "arguments.h"
 #include "parser.h"
 
@@ -34,16 +35,16 @@ static struct termios oldt, newt;
 // FUNCTIONS
 //------------------------------------------------------------------------------
 
-char *getContentFromFile(const char *const name)
+char *getContentFromFile(const char *const filename)
 {
     char *buffer = NULL;
     // Get file size
     struct stat st;
-    if (!stat(name, &st))
+    if (!stat(filename, &st))
     {
         const size_t fileSize = st.st_size;
         // Open file
-        FILE *file = fopen(name, "rb");
+        FILE *file = fopen(filename, "rb");
         if (file)
         {
             // Allocate memory to store the entire file
@@ -52,12 +53,15 @@ char *getContentFromFile(const char *const name)
             {
                 // Copy the contents of the file to the buffer
                 const size_t result = fread(buffer, sizeof(char), fileSize, file);
-                buffer[fileSize] = '\0';
-                if (result != fileSize)
+                if (!ferror(file))
                 {
-                    // Reading file error, free dinamically allocated memory
-                    free(buffer);
-                    buffer = NULL;
+                    buffer[fileSize] = '\0';
+                    if (result != fileSize)
+                    {
+                        // Reading file error, free dinamically allocated memory
+                        free(buffer);
+                        buffer = NULL;
+                    }
                 }
             }
             fclose(file);
@@ -175,7 +179,7 @@ int main(const int argc, const char *const argv[])
     }
     else
     {
-        fprintf(stderr, "\n[Error]: Couldn't open the file %s\n", fileName);
+        fprintf(stderr, "\n[Error]: Couldn't read the file %s: %s\n", fileName, strerror(errno));
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
