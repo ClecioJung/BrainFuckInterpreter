@@ -53,15 +53,12 @@ char *getContentFromFile(const char *const filename)
             {
                 // Copy the contents of the file to the buffer
                 const size_t result = fread(buffer, sizeof(char), fileSize, file);
-                if (!ferror(file))
+                buffer[fileSize] = '\0';
+                if (ferror(file) || result != fileSize)
                 {
-                    buffer[fileSize] = '\0';
-                    if (result != fileSize)
-                    {
-                        // Reading file error, free dinamically allocated memory
-                        free(buffer);
-                        buffer = NULL;
-                    }
+                    // Reading file error, free dinamically allocated memory
+                    free(buffer);
+                    buffer = NULL;
                 }
             }
             fclose(file);
